@@ -5,6 +5,9 @@
 module coredens
     implicit none
 
+! Information of the system
+    integer :: nspin
+
 ! Information of the 3D FFT grid
     integer :: n1,n2,n3
     real*8  :: dx1(3), dx2(3), dx3(3), dv
@@ -17,7 +20,7 @@ module coredens
     real*8,  allocatable :: pos_of_atom(:,:)
 
 ! Array containing the density
-    real*8,  allocatable :: rho(:,:,:)
+    real*8,  allocatable :: rho(:,:,:,:)
 
 ! Atoms in extended cell
     integer :: natom_ext

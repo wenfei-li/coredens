@@ -42,8 +42,12 @@ subroutine add_core
     end do
 
     tot_ncore = sum(ncore_of_atom)
-    rhocore = rhocore * tot_ncore / (sum(rhocore) * dv)
-    rho = rho + rhocore
+    rhocore = rhocore * tot_ncore / (sum(rhocore) * dv) / dble(nspin)
+    rho(1,:,:,:) = rho(1,:,:,:) + rhocore
+
+    if(nspin == 2) then
+        rho(2,:,:,:) = rho(2,:,:,:) + rhocore
+    endif
 
     deallocate(rhocore)
 end subroutine
