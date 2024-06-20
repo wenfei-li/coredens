@@ -2,8 +2,8 @@ subroutine map_grid
     use coredens
     implicit none
 
-    real*8  :: rcut = 6  ! cutoff radius for core densities
-    ! at 6 Bohr, the Gaussians are already vanishingly small
+    real*8  :: rcut = 6 + 1e-10  ! cutoff radius for core densities
+    ! at 6 Bohr, the core densities are already vanishingly small
 
     integer :: nboxext_1, nboxext_2, nboxext_3
     integer :: ibox1, ibox2, ibox3, iatom_ext, iatom

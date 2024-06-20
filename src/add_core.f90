@@ -1,9 +1,10 @@
 subroutine add_core
     use coredens
+    use coredensity_lib
     implicit none
 
     integer :: i1,i2,i3,index
-    real*8  :: tmp
+    real*8  :: tmp,tmp1
     integer :: iat,iat_ucell
     real*8  :: pos_grid(3), pos_atom(3),r
     integer :: zat,ncore
@@ -29,10 +30,15 @@ subroutine add_core
                     zat = z_of_atom(iat_ucell)
                     ncore = ncore_of_atom(iat_ucell)
 
-                    call edflib(zat,ncore,nfun,alf,coe)
-                    do ifun = 1, nfun
-                        tmp = tmp + coe(ifun)*exp(-alf(ifun)*r**2)
-                    enddo
+                    if(database_type == 0) then
+                        call edflib(zat,ncore,nfun,alf,coe)
+                        do ifun = 1, nfun
+                            tmp = tmp + coe(ifun)*exp(-alf(ifun)*r**2)
+                        enddo
+                    else
+                        call get_core_dens(zat,r,tmp1)
+                        tmp = tmp + tmp1
+                    endif
                 enddo
                 index = index + 1
 
@@ -43,6 +49,8 @@ subroutine add_core
 
     tot_ncore = sum(ncore_of_atom)
     rhocore = rhocore * tot_ncore / (sum(rhocore) * dv) / dble(nspin)
+    ! Need to renormalize; because the grid for valence density typically
+    ! will not be sufficient for core density ...
     rho(1,:,:,:) = rho(1,:,:,:) + rhocore
 
     if(nspin == 2) then
